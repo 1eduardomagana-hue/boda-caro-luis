@@ -83,12 +83,12 @@ export default function App() {
         />
       )
       case 'invitados': return <Invitados project={project} />
-      case 'logistica': return <PlaceholderPage pageId="logistica" />
-      case 'fotos': return <PlaceholderPage pageId="fotos" />
-      case 'week': return <PlaceholderPage pageId="week" />
-      case 'eventos': return <PlaceholderPage pageId="eventos" />
+      case 'logistica': return <PlaceholderPage pageId="logistica" project={project} />
+      case 'fotos': return <PlaceholderPage pageId="fotos" project={project} />
+      case 'week': return <PlaceholderPage pageId="week" project={project} />
+      case 'eventos': return <PlaceholderPage pageId="eventos" project={project} />
       case 'notas': return <Notas project={project} />
-      case 'categorias': return <PlaceholderPage pageId="categorias" />
+      case 'categorias': return <PlaceholderPage pageId="categorias" project={project} />
       case 'archivos': return <Archivos project={project} />
       case 'importar': return <Importar project={project} />
       default: return <Dashboard project={project} />
