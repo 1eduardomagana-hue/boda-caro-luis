@@ -28,7 +28,7 @@ export default function Notas({ project }) {
       <PageHeader title="Notas maestras" subtitle="Pega el contenido de tus Apple Notes. Se guardan en la base de datos." />
       <div className="section-gap">
         <div style={{background:C.beige,borderRadius:10,padding:'13px 18px',fontSize:12.5,color:C.warmGray,lineHeight:1.6}}>
-          💡 <strong>Tip:</strong> Copia cualquier nota de Apple Notes tal como está y pégala aquí. Si quieres que la IA la analice y clasifique, usa la sección <strong>Importar IA</strong>.
+          💡 <strong>Tip:</strong> Copia cualquier nota de Apple Notes tal como está y pégala aquí. 
         </div>
         {notes.map(n=>(
           <div key={n.id} style={{background:C.white,borderRadius:12,border:`1px solid ${C.sand}`,overflow:'hidden'}}>

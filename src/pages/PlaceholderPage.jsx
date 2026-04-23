@@ -353,7 +353,7 @@ export default function PlaceholderPage({ pageId, project }) {
         <div style={{ fontSize: 32, marginBottom: 12 }}>✨</div>
         <div style={{ fontFamily: "'Cormorant Garamond',serif", fontSize: 20, color: C.darkTaupe, marginBottom: 8 }}>Sección disponible</div>
         <div style={{ fontSize: 13, color: C.textLight, maxWidth: 400, margin: '0 auto', lineHeight: 1.7 }}>
-          Usa <strong>Importar IA</strong> para agregar contenido, o <strong>Notas maestras</strong> para pegar información directamente desde Apple Notes.
+          Usa <strong>Notas maestras</strong> para pegar información directamente desde Apple Notes.
         </div>
       </div>
     </div>

@@ -30,7 +30,6 @@ export const NAV_SECTIONS = [
     { id: 'notas', icon: '📝', label: 'Notas Maestras' },
     { id: 'categorias', icon: '✨', label: 'Categorías' },
     { id: 'archivos', icon: '🗂️', label: 'Archivos' },
-    { id: 'importar', icon: '🤖', label: 'Importar IA' },
   ]},
 ]
 

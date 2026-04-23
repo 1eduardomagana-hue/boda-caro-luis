@@ -119,7 +119,7 @@ export function Dashboard({ project, providers: rawProviders, events: rawEvents,
             ['01', 'Aquí ves el avance general y alertas urgentes'],
             ['02', 'En Notas Maestras pegas contenido de Apple Notes'],
             ['03', 'En Proveedores controlas pagos y saldos'],
-            ['04', 'En Importar IA la app extrae y clasifica por ti'],
+            ['04', 'Revisa pagos pendientes en Proveedores'],
           ].map(([n, t]) => (
             <div key={n} style={{ textAlign: 'center' }}>
               <span style={{ fontFamily: 'Cormorant Garamond, serif', fontSize: 28, color: 'var(--champagne)', opacity: 0.6, display: 'block' }}>{n}</span>

@@ -60,7 +60,7 @@ export default function Dashboard({ project }) {
           Tu boda, todo en un lugar · {project?.venue || VENUE}
         </div>
         <div style={{display:'grid',gridTemplateColumns:'repeat(4,1fr)',gap:16}}>
-          {[['01','Dashboard','Avance general de tu planeación'],['02','Importar IA','Pega notas de Apple Notes'],['03','Proveedores','Pagos y saldos pendientes'],['04','Timeline','Eventos y fechas clave']].map(([n,t,d]) => (
+          {[['01','Dashboard','Avance general de tu planeación'],['02','Notas','Pega y organiza tus Apple Notes'],['03','Proveedores','Pagos y saldos pendientes'],['04','Timeline','Eventos y fechas clave']].map(([n,t,d]) => (
             <div key={n} style={{textAlign:'center'}}>
               <span style={{fontFamily:"'Cormorant Garamond',serif",fontSize:28,color:C.champagne,opacity:.6,display:'block'}}>{n}</span>
               <div style={{fontSize:12,fontWeight:500,color:'white',margin:'2px 0'}}>{t}</div>

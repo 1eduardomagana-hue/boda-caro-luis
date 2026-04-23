@@ -10,10 +10,10 @@ const STATUS_OPTS = ['upcoming','past','key']
 
 function EventForm({ project, initial = {}, onSave, onCancel }) {
   const [form, setForm] = useState({
-    title: '', event_date: '', event_time: '', venue: '',
+    title: '', event_date: '', venue: '',
     description: '', event_type: 'otro', status: 'upcoming', is_urgent: false,
     ...initial,
-    event_time: initial.event_time ? initial.event_time.slice(0,5) : '',
+    event_time: initial.event_time ? String(initial.event_time).slice(0,5) : '',
   })
   const [saving, setSaving] = useState(false)
   const set = (k, v) => setForm(f => ({ ...f, [k]: v }))

@@ -9,7 +9,6 @@ import ChecklistPage from './pages/ChecklistPage.jsx'
 import Invitados from './pages/Invitados.jsx'
 import Notas from './pages/Notas.jsx'
 import Archivos from './pages/Archivos.jsx'
-import Importar from './pages/Importar.jsx'
 import PlaceholderPage from './pages/PlaceholderPage.jsx'
 import { Spinner } from './components/UI.jsx'
 import { getProject } from './lib/db.js'
@@ -90,7 +89,6 @@ export default function App() {
       case 'notas': return <Notas project={project} />
       case 'categorias': return <PlaceholderPage pageId="categorias" project={project} />
       case 'archivos': return <Archivos project={project} />
-      case 'importar': return <Importar project={project} />
       default: return <Dashboard project={project} />
     }
   }
