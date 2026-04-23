@@ -1,108 +1,148 @@
 import { useState } from 'react'
+import { COLORS } from '../lib/constants.js'
 
-// ─── Progress row ──────────────────────────────────────────
-export function ProgressRow({ name, value, max = 100 }) {
-  const pct = Math.min(100, Math.round((value / max) * 100))
+export const C = COLORS
+
+export function Card({ children, style = {}, className = '' }) {
   return (
-    <div className="progress-row">
-      <div className="progress-row-header">
-        <span className="progress-row-name">{name}</span>
-        <span className="progress-row-pct">{pct}%</span>
-      </div>
-      <div className="progress-outer">
-        <div className="progress-inner" style={{ width: `${pct}%` }} />
-      </div>
+    <div className={`card ${className}`} style={style}>
+      {children}
     </div>
   )
 }
 
-// ─── Status badge ──────────────────────────────────────────
-export function StatusBadge({ status }) {
-  if (status === 'pagado')   return <span className="badge badge-green">● Pagado</span>
-  if (status === 'parcial')  return <span className="badge badge-amber">◑ Parcial</span>
-  return <span className="badge badge-red">○ Pendiente</span>
+export function CardTitle({ children }) {
+  return <div className="card-title">{children}</div>
 }
 
-// ─── Accordion ─────────────────────────────────────────────
+export function Badge({ type = 'gray', children }) {
+  return <span className={`badge badge-${type}`}>{children}</span>
+}
+
+export function Btn({ children, onClick, ghost = false, disabled = false, style = {}, fullWidth = false }) {
+  return (
+    <button
+      onClick={onClick}
+      disabled={disabled}
+      className={ghost ? 'btn-ghost' : 'btn'}
+      style={{ opacity: disabled ? 0.5 : 1, cursor: disabled ? 'not-allowed' : 'pointer', width: fullWidth ? '100%' : undefined, ...style }}
+    >
+      {children}
+    </button>
+  )
+}
+
+export function Input({ value, onChange, placeholder, type = 'text', rows, style = {} }) {
+  if (rows) return (
+    <textarea value={value} onChange={e => onChange(e.target.value)} placeholder={placeholder}
+      rows={rows} className="input-field" style={style} />
+  )
+  return (
+    <input value={value} onChange={e => onChange(e.target.value)} placeholder={placeholder}
+      type={type} className="input-field" style={{ height: 'auto', ...style }} />
+  )
+}
+
+export function Select({ value, onChange, options, style = {} }) {
+  return (
+    <select value={value} onChange={e => onChange(e.target.value)}
+      className="input-field" style={{ height: 'auto', cursor: 'pointer', ...style }}>
+      {options.map(o => (
+        <option key={typeof o === 'string' ? o : o.value} value={typeof o === 'string' ? o : o.value}>
+          {typeof o === 'string' ? o : o.label}
+        </option>
+      ))}
+    </select>
+  )
+}
+
 export function Accordion({ title, children, defaultOpen = false }) {
   const [open, setOpen] = useState(defaultOpen)
   return (
     <div className="accordion">
       <div className="accordion-header" onClick={() => setOpen(o => !o)}>
         <span className="accordion-title">{title}</span>
-        <span style={{ color: 'var(--taupe)', fontSize: 12 }}>{open ? '▲' : '▼'}</span>
+        <span style={{ color: C.taupe, fontSize: 12 }}>{open ? '▲' : '▼'}</span>
       </div>
       {open && <div className="accordion-body">{children}</div>}
     </div>
   )
 }
 
-// ─── Check item ─────────────────────────────────────────────
-export function CheckItem({ item, onToggle }) {
+export function ProgressBar({ value, max = 100 }) {
+  const pct = Math.min(100, Math.round((value / max) * 100))
   return (
-    <div className="check-item" onClick={onToggle}>
-      <div className={`check-box ${item.done ? 'done' : ''}`}>
-        {item.done && <span style={{ color: 'white', fontSize: 9, fontWeight: 'bold' }}>✓</span>}
-      </div>
-      <span className={`check-text ${item.done ? 'done' : ''}`}>{item.text || item.content}</span>
+    <div className="progress-bar-outer">
+      <div className="progress-bar-inner" style={{ width: `${pct}%` }} />
     </div>
   )
 }
 
-// ─── Spinner ────────────────────────────────────────────────
+export function SectionGap({ children }) {
+  return <div className="section-gap">{children}</div>
+}
+
+export function Grid({ cols = 2, children, gap = 16 }) {
+  return (
+    <div className={`grid-${cols}`} style={{ gap }}>
+      {children}
+    </div>
+  )
+}
+
 export function Spinner({ message = 'Cargando...' }) {
   return (
-    <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', padding: '60px 20px', gap: 14 }}>
-      <div className="spinner" />
-      <span style={{ fontSize: 13, color: 'var(--text-light)' }}>{message}</span>
+    <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', padding: '48px 20px', gap: 14 }}>
+      <div style={{
+        width: 36, height: 36, borderRadius: '50%',
+        border: `3px solid ${C.sand}`, borderTopColor: C.gold,
+        animation: 'spin 0.9s linear infinite',
+      }} />
+      <style>{`@keyframes spin{to{transform:rotate(360deg)}}`}</style>
+      <div style={{ fontSize: 13, color: C.textLight }}>{message}</div>
     </div>
   )
 }
 
-// ─── Empty state ────────────────────────────────────────────
-export function EmptyState({ icon, title, hint, action, onAction }) {
-  return (
-    <div style={{
-      textAlign: 'center', padding: '52px 24px', background: 'var(--white)',
-      borderRadius: 12, border: '1.5px dashed var(--sand)',
-    }}>
-      <div style={{ fontSize: 34, marginBottom: 10 }}>{icon}</div>
-      <div style={{ fontFamily: 'Cormorant Garamond, serif', fontSize: 20, color: 'var(--dark-taupe)', marginBottom: 6 }}>{title}</div>
-      <div style={{ fontSize: 12.5, color: 'var(--text-light)', maxWidth: 300, margin: '0 auto 16px', lineHeight: 1.6 }}>{hint}</div>
-      {action && <button className="btn-ghost" onClick={onAction}>{action}</button>}
-    </div>
-  )
+export function StatusDot({ status }) {
+  const color = status === 'pagado' ? C.green : status === 'parcial' ? C.amber : C.red
+  return <span style={{ display: 'inline-block', width: 8, height: 8, borderRadius: '50%', background: color, marginRight: 6 }} />
 }
 
-// ─── Offline banner ─────────────────────────────────────────
-export function OfflineBanner() {
+export function StatusBadge({ status }) {
+  const map = { pagado: ['badge-green', '● Pagado'], parcial: ['badge-amber', '◑ Parcial'], pendiente: ['badge-red', '○ Pendiente'] }
+  const [cls, label] = map[status] || ['badge-gray', status]
+  return <span className={`badge ${cls}`}>{label}</span>
+}
+
+export function Alert({ children, type = 'warning' }) {
   return (
     <div style={{
       background: '#FDF3E8', border: '1px solid #E8D0A8', borderRadius: 8,
-      padding: '10px 16px', fontSize: 12, color: '#8B5E1A', marginBottom: 16,
-      display: 'flex', gap: 8,
+      padding: '10px 14px', fontSize: 12.5, color: '#8B5E1A',
+      marginBottom: 8, display: 'flex', alignItems: 'flex-start', gap: 8,
     }}>
-      ⚠️ Sin conexión a Supabase — los datos mostrados son de demostración. Configura las variables de entorno para activar la persistencia.
+      {type === 'warning' ? '⚠️' : 'ℹ️'} <span>{children}</span>
     </div>
   )
 }
 
-// ─── Confirm delete button ──────────────────────────────────
-export function DeleteBtn({ onConfirm, label = '✕' }) {
-  const [confirm, setConfirm] = useState(false)
-  if (confirm) return (
-    <span style={{ display: 'inline-flex', gap: 4, alignItems: 'center' }}>
-      <span style={{ fontSize: 11, color: 'var(--red)' }}>¿Eliminar?</span>
-      <button className="btn" style={{ background: 'var(--red)', padding: '3px 8px', fontSize: 11 }} onClick={onConfirm}>Sí</button>
-      <button className="btn-ghost" style={{ padding: '3px 8px', fontSize: 11 }} onClick={() => setConfirm(false)}>No</button>
-    </span>
-  )
+export function CheckItem({ item, onToggle }) {
   return (
-    <button onClick={() => setConfirm(true)}
-      style={{ background: 'none', border: 'none', cursor: 'pointer', color: 'var(--taupe)', fontSize: 13, padding: '2px 5px', borderRadius: 4, transition: 'color 0.15s' }}
-      onMouseEnter={e => e.currentTarget.style.color = 'var(--red)'}
-      onMouseLeave={e => e.currentTarget.style.color = 'var(--taupe)'}>
-      {label}
-    </button>
+    <div className="checklist-item" onClick={onToggle}>
+      <div className={`check-box ${item.done ? 'done' : ''}`}>
+        {item.done && <span style={{ color: 'white', fontSize: 9, fontWeight: 'bold' }}>✓</span>}
+      </div>
+      <span className={`check-text ${item.done ? 'done' : ''}`}>{item.text}</span>
+    </div>
+  )
+}
+
+export function PageHeader({ title, subtitle }) {
+  return (
+    <div className="page-header">
+      <div className="page-title">{title}</div>
+      {subtitle && <div className="page-subtitle">{subtitle}</div>}
+    </div>
   )
 }
