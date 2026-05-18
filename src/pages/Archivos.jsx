@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react'
 import { getLinks, upsertLink, deleteLink, getFiles, uploadFile, deleteFile } from '../lib/db.js'
-import { Spinner, PageHeader, SectionHeader, EmptyState, Input, Select, Btn } from '../components/UI.jsx'
+import { Spinner, PageHeader, SectionRow, EmptyState, Inp, Sel } from '../components/UI.jsx'
 
 const LINK_CATS=['Contratos','Proveedores','Invitados','Inspiracion','Musica','Logistica','Otros']
 const fmt=(b)=>b<1024?b+' B':b<1048576?(b/1024).toFixed(1)+' KB':(b/1048576).toFixed(1)+' MB'
@@ -40,14 +40,13 @@ export default function Archivos({ project }) {
               color:tab===v?'#3D2E27':'#8B7D72',
               border:'none',cursor:'pointer',fontFamily:"'Jost',sans-serif",
               boxShadow:tab===v?'0 1px 4px rgba(92,77,68,.1)':'none',
-              transition:'all .2s',
-            }}>{l}</button>
+              transition:'all .2s' }}>{l}</button>
           ))}
         </div>
 
         {tab==='links' && (
           <>
-            <Btn onClick={()=>setSheet(true)}>+ Agregar link</Btn>
+            <button className="btn" onClick={()=>setSheet(true)}>+ Agregar link</button>
             {sheet && (
               <>
                 <div className="sheet-overlay" onClick={()=>setSheet(false)}/>
@@ -55,13 +54,13 @@ export default function Archivos({ project }) {
                   <div className="sheet-handle"/>
                   <div className="sheet-title">Nuevo link</div>
                   <div className="form-stack">
-                    <Input value={newLink.title} onChange={v=>setNewLink(n=>({...n,title:v}))} placeholder="Título *"/>
-                    <Input value={newLink.url} onChange={v=>setNewLink(n=>({...n,url:v}))} placeholder="https://…"/>
-                    <Select value={newLink.category} onChange={v=>setNewLink(n=>({...n,category:v}))} options={LINK_CATS}/>
-                    <Input value={newLink.notes||''} onChange={v=>setNewLink(n=>({...n,notes:v}))} placeholder="Nota opcional…" rows={2}/>
+                    <Inp value={newLink.title} onChange={v=>setNewLink(n=>({...n,title:v}))} placeholder="Título *"/>
+                    <Inp value={newLink.url} onChange={v=>setNewLink(n=>({...n,url:v}))} placeholder="https://…"/>
+                    <Sel value={newLink.category} onChange={v=>setNewLink(n=>({...n,category:v}))} options={LINK_CATS}/>
+                    <Inp value={newLink.notes||''} onChange={v=>setNewLink(n=>({...n,notes:v}))} placeholder="Nota opcional…" rows={2}/>
                     {err&&<div style={{fontSize:12,color:'#B85C5C'}}>{err}</div>}
-                    <Btn onClick={saveLink}>Guardar</Btn>
-                    <Btn secondary onClick={()=>setSheet(false)}>Cancelar</Btn>
+                    <button className="btn" onClick={saveLink}>Guardar</button>
+                    <button className="btn-ghost" onClick={()=>setSheet(false)}>Cancelar</button>
                   </div>
                 </div>
               </>

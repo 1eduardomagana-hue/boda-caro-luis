@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react'
 import { getNotes, upsertNote } from '../lib/db.js'
-import { Spinner, PageHeader, EmptyState, Input, Btn } from '../components/UI.jsx'
+import { Spinner, PageHeader, EmptyState, Inp } from '../components/UI.jsx'
 
 export default function Notas({ project }) {
   const [notes,setNotes] = useState([])
@@ -28,10 +28,10 @@ export default function Notas({ project }) {
           <div className="card">
             <div className="card-pad">
               <div className="form-stack">
-                <Input value={form.title} onChange={v=>setForm(f=>({...f,title:v}))} placeholder="Nombre de la nota"/>
-                <Input value={form.content} onChange={v=>setForm(f=>({...f,content:v}))} placeholder="Pega aquí el contenido completo…" rows={10}/>
-                <Btn onClick={save}>Guardar nota</Btn>
-                <Btn secondary onClick={()=>setAdding(false)}>Cancelar</Btn>
+                <Inp value={form.title} onChange={v=>setForm(f=>({...f,title:v}))} placeholder="Nombre de la nota"/>
+                <Inp value={form.content} onChange={v=>setForm(f=>({...f,content:v}))} placeholder="Pega aquí el contenido completo…" rows={10}/>
+                <button className="btn" onClick={save}>Guardar nota</button>
+                <button className="btn-ghost" onClick={()=>setAdding(false)}>Cancelar</button>
               </div>
             </div>
           </div>

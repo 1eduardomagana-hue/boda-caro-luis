@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react'
 import { getChecklist, toggleChecklistItem, upsertChecklistItem } from '../lib/db.js'
 import { supabase } from '../lib/supabase.js'
-import { Spinner, PageHeader, CheckRow, ProgressBar, SectionHeader, EmptyState, Input, Btn } from '../components/UI.jsx'
+import { Spinner, PageHeader, CheckRow, ProgressBar, SectionRow, EmptyState, Inp } from '../components/UI.jsx'
 
 export default function ChecklistPage({ project, categorySlug, title, subtitle, meta }) {
   const [items,setItems] = useState([])
@@ -38,15 +38,15 @@ export default function ChecklistPage({ project, categorySlug, title, subtitle, 
         )}
 
         <div>
-          <SectionHeader label={`Checklist · ${done}/${items.length}`}/>
+          <SectionRow label={`Checklist · ${done}/${items.length}`}/>
           <ProgressBar value={done} max={items.length||1} style={{marginBottom:12}}/>
 
           {adding && (
             <div className="card" style={{marginBottom:10}}>
               <div className="card-pad">
                 <div style={{display:'flex',gap:8}}>
-                  <Input value={newText} onChange={setNewText} placeholder="Nueva tarea…" style={{flex:1}}/>
-                  <Btn onClick={add} style={{width:'auto',padding:'13px 16px'}}>OK</Btn>
+                  <Inp value={newText} onChange={setNewText} placeholder="Nueva tarea…" style={{flex:1}}/>
+                  <button className="btn" onClick={add} style={{width:'auto',padding:'13px 16px'}}>OK</button>
                 </div>
               </div>
             </div>

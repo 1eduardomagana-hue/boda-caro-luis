@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react'
 import { getGuests, upsertGuest } from '../lib/db.js'
 import { supabase } from '../lib/supabase.js'
-import { Spinner, PageHeader, ProgressBar, EmptyState, Input, Btn } from '../components/UI.jsx'
+import { Spinner, PageHeader, ProgressBar, EmptyState, Inp } from '../components/UI.jsx'
 
 function GuestSheet({ project, initial={}, onSave, onCancel }) {
   const [form,setForm] = useState(()=>({group_name:'',notes:'',...initial,total_count:initial.total_count!=null?String(initial.total_count):'',confirmed_count:initial.confirmed_count!=null?String(initial.confirmed_count):''}))
@@ -15,14 +15,14 @@ function GuestSheet({ project, initial={}, onSave, onCancel }) {
         <div className="sheet-handle"/>
         <div className="sheet-title">{initial.id?'Editar grupo':'Nuevo grupo'}</div>
         <div className="form-stack">
-          <Input value={form.group_name} onChange={v=>set('group_name',v)} placeholder="Nombre del grupo *"/>
+          <Inp value={form.group_name} onChange={v=>set('group_name',v)} placeholder="Nombre del grupo *"/>
           <div className="grid-2-mob">
-            <Input value={String(form.total_count)} onChange={v=>set('total_count',v)} placeholder="Total" type="number" label="Total"/>
-            <Input value={String(form.confirmed_count)} onChange={v=>set('confirmed_count',v)} placeholder="Confirmados" type="number" label="Confirmados"/>
+            <Inp value={String(form.total_count)} onChange={v=>set('total_count',v)} placeholder="Total" type="number" label="Total"/>
+            <Inp value={String(form.confirmed_count)} onChange={v=>set('confirmed_count',v)} placeholder="Confirmados" type="number" label="Confirmados"/>
           </div>
-          <Input value={form.notes||''} onChange={v=>set('notes',v)} placeholder="Notas"/>
-          <Btn onClick={save} disabled={saving}>{saving?'Guardando…':'Guardar'}</Btn>
-          <Btn secondary onClick={onCancel}>Cancelar</Btn>
+          <Inp value={form.notes||''} onChange={v=>set('notes',v)} placeholder="Notas"/>
+          <button className="btn" onClick={save} disabled={saving}>{saving?'Guardando…':'Guardar'}</button>
+          <button className="btn-ghost" onClick={onCancel}>Cancelar</button>
         </div>
       </div>
     </>

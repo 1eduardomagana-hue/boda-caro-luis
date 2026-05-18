@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react'
 import { supabase } from '../lib/supabase.js'
-import { Spinner, PageHeader, SectionHeader, EmptyState, Input, Select, Btn } from '../components/UI.jsx'
+import { Spinner, PageHeader, SectionRow, EmptyState, Inp, Sel } from '../components/UI.jsx'
 
 // ── Logística ─────────────────────────────────────────────────────────────────
 function Logistica({ project }) {
@@ -41,15 +41,15 @@ function Logistica({ project }) {
               <div className="sheet-title">{sheet==='new'?'Nueva actividad':'Editar actividad'}</div>
               <div className="form-stack">
                 <div className="grid-2-mob">
-                  <Input value={form.hora} onChange={v=>set('hora',v)} placeholder="16:00" label="Hora"/>
-                  <Input value={form.actividad} onChange={v=>set('actividad',v)} placeholder="Actividad *" label="Actividad"/>
+                  <Inp value={form.hora} onChange={v=>set('hora',v)} placeholder="16:00" label="Hora"/>
+                  <Inp value={form.actividad} onChange={v=>set('actividad',v)} placeholder="Actividad *" label="Actividad"/>
                 </div>
                 <div className="grid-2-mob">
-                  <Input value={form.responsable} onChange={v=>set('responsable',v)} placeholder="Responsable" label="Responsable"/>
-                  <Input value={form.lugar} onChange={v=>set('lugar',v)} placeholder="Lugar" label="Lugar"/>
+                  <Inp value={form.responsable} onChange={v=>set('responsable',v)} placeholder="Responsable" label="Responsable"/>
+                  <Inp value={form.lugar} onChange={v=>set('lugar',v)} placeholder="Lugar" label="Lugar"/>
                 </div>
-                <Btn onClick={save}>Guardar</Btn>
-                <Btn secondary onClick={()=>setSheet(null)}>Cancelar</Btn>
+                <button className="btn" onClick={save}>Guardar</button>
+                <button className="btn-ghost" onClick={()=>setSheet(null)}>Cancelar</button>
               </div>
             </div>
           </>
@@ -108,8 +108,8 @@ function Fotos({ project }) {
         {adding && (
           <div className="card"><div className="card-pad">
             <div style={{display:'flex',gap:8}}>
-              <Input value={newShot} onChange={setNewShot} placeholder="Descripción del shot…"/>
-              <Btn onClick={add} style={{width:'auto',padding:'13px 16px'}}>OK</Btn>
+              <Inp value={newShot} onChange={setNewShot} placeholder="Descripción del shot…"/>
+              <button className="btn" onClick={add} style={{width:'auto',padding:'13px 16px'}}>OK</button>
             </div>
           </div></div>
         )}
@@ -124,9 +124,9 @@ function Fotos({ project }) {
                   </div>
                   {editId===s.id
                     ? <div style={{flex:1,display:'flex',gap:6}}>
-                        <Input value={editText} onChange={setEditText} style={{flex:1}}/>
-                        <Btn onClick={()=>saveEdit(s.id)} style={{width:'auto',padding:'9px 12px',fontSize:12}}>✓</Btn>
-                        <Btn secondary onClick={()=>setEditId(null)} style={{width:'auto',padding:'9px 10px',fontSize:12}}>✕</Btn>
+                        <Inp value={editText} onChange={setEditText} style={{flex:1}}/>
+                        <button className="btn" onClick={()=>saveEdit(s.id)} style={{width:'auto',padding:'9px 12px',fontSize:12}}>✓</button>
+                        <button className="btn-ghost" onClick={()=>setEditId(null)} style={{width:'auto',padding:'9px 10px',fontSize:12}}>✕</button>
                       </div>
                     : <>
                         <span className={`check-text ${s.done?'done':''}`} style={{flex:1}}>{s.text}</span>
@@ -178,11 +178,11 @@ function WeekPlanner({ project }) {
               <div className="sheet-handle"/>
               <div className="sheet-title">Nueva tarea</div>
               <div className="form-stack">
-                <Select value={form.dia} onChange={v=>set('dia',v)} options={DIAS} label="Día"/>
-                <Input value={form.texto} onChange={v=>set('texto',v)} placeholder="¿Qué hay que hacer? *" label="Tarea"/>
-                <Select value={form.prioridad} onChange={v=>set('prioridad',v)} options={['alta','media','baja']} label="Prioridad"/>
-                <Btn onClick={add}>Guardar</Btn>
-                <Btn secondary onClick={()=>setSheet(false)}>Cancelar</Btn>
+                <Sel value={form.dia} onChange={v=>set('dia',v)} options={DIAS} label="Día"/>
+                <Inp value={form.texto} onChange={v=>set('texto',v)} placeholder="¿Qué hay que hacer? *" label="Tarea"/>
+                <Sel value={form.prioridad} onChange={v=>set('prioridad',v)} options={['alta','media','baja']} label="Prioridad"/>
+                <button className="btn" onClick={add}>Guardar</button>
+                <button className="btn-ghost" onClick={()=>setSheet(false)}>Cancelar</button>
               </div>
             </div>
           </>
@@ -211,7 +211,7 @@ function WeekPlanner({ project }) {
               })}
             </div>
             {/* List view below */}
-            <SectionHeader label="Todas las tareas"/>
+            <SectionRow label="Todas las tareas"/>
             <div className="card" style={{overflow:'hidden'}}>
               {parsed.map(t=>(
                 <div key={t.id} style={{display:'flex',alignItems:'center',gap:10,padding:'11px 16px',borderBottom:'1px solid rgba(196,175,160,.1)'}}>

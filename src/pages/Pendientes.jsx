@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react'
 import { getChecklist, toggleChecklistItem, upsertChecklistItem } from '../lib/db.js'
-import { Spinner, CheckRow, PageHeader, SectionHeader, Card, EmptyState, Input, Btn } from '../components/UI.jsx'
+import { Spinner, CheckRow, PageHeader, SectionRow, EmptyState, Inp } from '../components/UI.jsx'
 import { supabase } from '../lib/supabase.js'
 
 const CATS = [
@@ -61,12 +61,12 @@ export default function Pendientes({ project }) {
           <div className="card">
             <div className="card-pad">
               <div className="form-stack">
-                <Input value={newText} onChange={setNewText} placeholder="¿Qué hay que hacer?" />
+                <Inp value={newText} onChange={setNewText} placeholder="¿Qué hay que hacer?" />
                 <div className="grid-2-mob">
                   <select value={newCat} onChange={e=>setNewCat(e.target.value)} className="input-field" style={{height:'auto'}}>
                     {CATS.map(c=><option key={c.slug} value={c.slug}>{c.icon} {c.label}</option>)}
                   </select>
-                  <Btn onClick={addItem}>Guardar</Btn>
+                  <button className="btn" onClick={addItem}>Guardar</button>
                 </div>
               </div>
             </div>
@@ -82,8 +82,7 @@ export default function Pendientes({ project }) {
               background:filter===f.id?'#5C4D44':'white',
               color:filter===f.id?'#D4B896':'#8B7D72',
               fontFamily:"'Jost',sans-serif", whiteSpace:'nowrap', flexShrink:0,
-              transition:'all .15s', touchAction:'manipulation',
-            }}>{f.label}</button>
+              transition:'all .15s', touchAction:'manipulation' }}>{f.label}</button>
           ))}
         </div>
 
@@ -96,7 +95,7 @@ export default function Pendientes({ project }) {
             if (!catItems.length) return null
             return (
               <div key={cat.slug}>
-                <SectionHeader label={`${cat.icon} ${cat.label}`}/>
+                <SectionRow label={`${cat.icon} ${cat.label}`}/>
                 <div className="card" style={{overflow:'hidden'}}>
                   {catItems.map(item=>(
                     <div key={item.id} style={{display:'flex',alignItems:'center',borderBottom:'1px solid rgba(196,175,160,.1)',padding:'0 14px'}}>
@@ -118,7 +117,7 @@ export default function Pendientes({ project }) {
           if (!general.length) return null
           return (
             <div>
-              <SectionHeader label="✓ General"/>
+              <SectionRow label="✓ General"/>
               <div className="card" style={{overflow:'hidden'}}>
                 {general.map(item=>(
                   <div key={item.id} style={{display:'flex',alignItems:'center',borderBottom:'1px solid rgba(196,175,160,.1)',padding:'0 14px'}}>

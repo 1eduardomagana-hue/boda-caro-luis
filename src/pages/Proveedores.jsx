@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react'
 import { getProviders, upsertProvider, deleteProvider } from '../lib/db.js'
-import { Spinner, PageHeader, SectionHeader, StatusBadge, EmptyState, Input, Select, Btn, Alert } from '../components/UI.jsx'
+import { Spinner, PageHeader, SectionRow, StatusBadge, EmptyState, Inp, Sel,  Alert } from '../components/UI.jsx'
 
 const CATS = ['Fotografía','Video','Catering','Flores','Música','Salón','Vestido','Maquillaje','Transporte','Pastel','Invitaciones','Ceremonia','Otro']
 
@@ -25,28 +25,28 @@ function ProviderSheet({ project, initial={}, onSave, onCancel }) {
         <div className="sheet-handle"/>
         <div className="sheet-title">{initial.id?'Editar proveedor':'Nuevo proveedor'}</div>
         <div className="form-stack">
-          <Input value={form.name} onChange={v=>set('name',v)} placeholder="Nombre del proveedor *"/>
-          <Select value={form.category} onChange={v=>set('category',v)} options={CATS}/>
-          <Input value={form.contact||''} onChange={v=>set('contact',v)} placeholder="Contacto / teléfono / email"/>
+          <Inp value={form.name} onChange={v=>set('name',v)} placeholder="Nombre del proveedor *"/>
+          <Sel value={form.category} onChange={v=>set('category',v)} options={CATS}/>
+          <Inp value={form.contact||''} onChange={v=>set('contact',v)} placeholder="Contacto / teléfono / email"/>
           <div className="grid-2-mob">
-            <Input value={String(form.total_amount)} onChange={v=>set('total_amount',v)} placeholder="Total MXN" type="number" label="Total"/>
-            <Input value={String(form.paid_amount)} onChange={v=>set('paid_amount',v)} placeholder="Pagado MXN" type="number" label="Pagado"/>
+            <Inp value={String(form.total_amount)} onChange={v=>set('total_amount',v)} placeholder="Total MXN" type="number" label="Total"/>
+            <Inp value={String(form.paid_amount)} onChange={v=>set('paid_amount',v)} placeholder="Pagado MXN" type="number" label="Pagado"/>
           </div>
           <div className="grid-2-mob">
-            <Input value={form.payment_due||''} onChange={v=>set('payment_due',v)} type="date" label="Fecha límite"/>
-            <Select value={form.status} onChange={v=>set('status',v)} options={['pendiente','parcial','pagado']} label="Estado"/>
+            <Inp value={form.payment_due||''} onChange={v=>set('payment_due',v)} type="date" label="Fecha límite"/>
+            <Sel value={form.status} onChange={v=>set('status',v)} options={['pendiente','parcial','pagado']} label="Estado"/>
           </div>
-          <Input value={form.notes||''} onChange={v=>set('notes',v)} placeholder="Notas adicionales…" rows={3}/>
-          {err && <Alert type="error">{err}</Alert>}
-          <Btn onClick={save} disabled={saving}>{saving?'Guardando…':'Guardar proveedor'}</Btn>
-          <Btn secondary onClick={onCancel}>Cancelar</Btn>
+          <Inp value={form.notes||''} onChange={v=>set('notes',v)} placeholder="Notas adicionales…" rows={3}/>
+          {err && <div style={{background:"#FAEAEA",borderRadius:10,padding:"10px 14px",fontSize:13,color:"#B85C5C"}}>{err}</div>}
+          <button className="btn" onClick={save} disabled={saving}>{saving?'Guardando…':'Guardar proveedor'}</button>
+          <button className="btn-ghost" onClick={onCancel}>Cancelar</button>
         </div>
       </div>
     </>
   )
 }
 
-function ProviderCard({ p, onEdit, onDelete }) {
+function Provider({ p, onEdit, onDelete }) {
   const [open,setOpen] = useState(false)
   const pct = p.total_amount ? Math.round((p.paid_amount||0)/p.total_amount*100) : 0
   return (
@@ -149,16 +149,15 @@ export default function Proveedores({ project }) {
               border:`1px solid ${filter===v?'#B8975A':'rgba(196,175,160,.35)'}`,
               background:filter===v?'#5C4D44':'white',
               color:filter===v?'#D4B896':'#8B7D72',
-              fontFamily:"'Jost',sans-serif",touchAction:'manipulation',transition:'all .15s',
-            }}>{l}</button>
+              fontFamily:"'Jost',sans-serif",touchAction:'manipulation',transition:'all .15s' }}>{l}</button>
           ))}
         </div>
 
-        {/* Cards */}
+        {/* s */}
         {filtered.length===0
           ? <EmptyState icon="💳" title="Sin proveedores" sub="Agrega el primer proveedor." action="+ Agregar" onAction={()=>setSheet('new')}/>
           : filtered.map(p=>(
-              <ProviderCard key={p.id} p={p}
+              <Provider key={p.id} p={p}
                 onEdit={()=>setSheet(p)}
                 onDelete={()=>handleDelete(p.id)}/>
             ))

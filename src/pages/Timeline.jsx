@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react'
 import { getEvents, upsertEvent } from '../lib/db.js'
 import { supabase } from '../lib/supabase.js'
-import { Spinner, PageHeader, EmptyState, Input, Select, Btn } from '../components/UI.jsx'
+import { Spinner, PageHeader, EmptyState, Inp, Sel } from '../components/UI.jsx'
 
 const TIPOS = ['civil','misa','recepcion','preboda','ensayo','despedida','brunch','otro']
 
@@ -17,23 +17,23 @@ function EventSheet({ project, initial={}, onSave, onCancel }) {
         <div className="sheet-handle"/>
         <div className="sheet-title">{initial.id?'Editar evento':'Nuevo evento'}</div>
         <div className="form-stack">
-          <Input value={form.title} onChange={v=>set('title',v)} placeholder="Nombre del evento *"/>
+          <Inp value={form.title} onChange={v=>set('title',v)} placeholder="Nombre del evento *"/>
           <div className="grid-2-mob">
-            <Input value={form.event_date} onChange={v=>set('event_date',v)} type="date" label="Fecha"/>
-            <Input value={form.event_time} onChange={v=>set('event_time',v)} type="time" label="Hora"/>
+            <Inp value={form.event_date} onChange={v=>set('event_date',v)} type="date" label="Fecha"/>
+            <Inp value={form.event_time} onChange={v=>set('event_time',v)} type="time" label="Hora"/>
           </div>
-          <Input value={form.venue||''} onChange={v=>set('venue',v)} placeholder="Lugar"/>
-          <Input value={form.description||''} onChange={v=>set('description',v)} placeholder="Descripción" rows={2}/>
+          <Inp value={form.venue||''} onChange={v=>set('venue',v)} placeholder="Lugar"/>
+          <Inp value={form.description||''} onChange={v=>set('description',v)} placeholder="Descripción" rows={2}/>
           <div className="grid-2-mob">
-            <Select value={form.event_type} onChange={v=>set('event_type',v)} options={TIPOS} label="Tipo"/>
-            <Select value={form.status} onChange={v=>set('status',v)} options={[{value:'upcoming',label:'Próximo'},{value:'past',label:'Listo'},{value:'key',label:'Especial'}]} label="Estado"/>
+            <Sel value={form.event_type} onChange={v=>set('event_type',v)} options={TIPOS} label="Tipo"/>
+            <Sel value={form.status} onChange={v=>set('status',v)} options={[{value:'upcoming',label:'Próximo'},{value:'past',label:'Listo'},{value:'key',label:'Especial'}]} label="Estado"/>
           </div>
           <label style={{display:'flex',alignItems:'center',gap:10,fontSize:14,color:'#3D2E27',cursor:'pointer',padding:'4px 0'}}>
             <input type="checkbox" checked={form.is_urgent} onChange={e=>set('is_urgent',e.target.checked)} style={{width:18,height:18,accentColor:'#B85C5C'}}/>
             Marcar como urgente
           </label>
-          <Btn onClick={save} disabled={saving}>{saving?'Guardando…':'Guardar'}</Btn>
-          <Btn secondary onClick={onCancel}>Cancelar</Btn>
+          <button className="btn" onClick={save} disabled={saving}>{saving?'Guardando…':'Guardar'}</button>
+          <button className="btn-ghost" onClick={onCancel}>Cancelar</button>
         </div>
       </div>
     </>
