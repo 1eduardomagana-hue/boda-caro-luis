@@ -1,67 +1,83 @@
 import { useState } from 'react'
+import { APP_PASSWORD } from '../lib/constants.js'
 
-const APP_PASSWORD = import.meta.env.VITE_APP_PASSWORD || 'boda2026'
-const STORAGE_KEY = 'boda_auth'
+export default function Login({ onLogin }) {
+  const [pw, setPw] = useState('')
+  const [err, setErr] = useState('')
+  const [loading, setLoading] = useState(false)
 
-export function useAuth() {
-  const [authed, setAuthed] = useState(() => sessionStorage.getItem(STORAGE_KEY) === '1')
-  const login = (pwd) => {
-    if (pwd === APP_PASSWORD) { sessionStorage.setItem(STORAGE_KEY, '1'); setAuthed(true); return true }
-    return false
-  }
-  const logout = () => { sessionStorage.removeItem(STORAGE_KEY); setAuthed(false) }
-  return { authed, login, logout }
-}
-
-export function Login({ onLogin }) {
-  const [pwd, setPwd] = useState('')
-  const [error, setError] = useState('')
-  const [show, setShow] = useState(false)
-
-  const submit = (e) => {
+  const submit = async (e) => {
     e.preventDefault()
-    const ok = onLogin(pwd)
-    if (!ok) { setError('Contraseña incorrecta'); setPwd('') }
+    setLoading(true)
+    await new Promise(r => setTimeout(r, 350))
+    if (pw === APP_PASSWORD) {
+      localStorage.setItem('boda_auth', 'ok')
+      onLogin()
+    } else {
+      setErr('Contraseña incorrecta')
+      setLoading(false)
+    }
   }
 
   return (
-    <div className="login-wrap">
-      <div className="login-card">
-        <div style={{ textAlign: 'center', marginBottom: 36 }}>
-          <div style={{ fontSize: 32, marginBottom: 12 }}>💍</div>
-          <div style={{ fontFamily: 'Cormorant Garamond, serif', fontSize: 28, color: 'var(--dark-taupe)', marginBottom: 4 }}>
-            Caro &amp; Luis
-          </div>
-          <div style={{ fontSize: 11, letterSpacing: '3px', textTransform: 'uppercase', color: 'var(--taupe)' }}>
-            20 · noviembre · 2026
-          </div>
+    <div style={{
+      minHeight:'100dvh', background:'#FAF8F5',
+      display:'flex', flexDirection:'column',
+      alignItems:'center', justifyContent:'center',
+      padding:'24px 28px',
+    }}>
+      {/* Logo area */}
+      <div style={{textAlign:'center', marginBottom:48}}>
+        <div style={{
+          fontFamily:"'Cormorant Garamond',serif",
+          fontSize:52, fontWeight:300, color:'#5C4D44',
+          letterSpacing:'-1px', lineHeight:1,
+        }}>C & L</div>
+        <div style={{
+          fontSize:10, letterSpacing:'4px', textTransform:'uppercase',
+          color:'#C4AFA0', marginTop:12,
+        }}>BODA · 20 NOV 2026</div>
+        <div style={{fontSize:12, color:'#C4AFA0', marginTop:4}}>
+          Quinta Montes Molina
+        </div>
+      </div>
+
+      {/* Card */}
+      <div style={{
+        background:'white', borderRadius:24, padding:'28px 24px',
+        width:'100%', maxWidth:360,
+        border:'1px solid rgba(196,175,160,.2)',
+        boxShadow:'0 8px 40px rgba(92,77,68,.1)',
+      }}>
+        <div style={{
+          fontFamily:"'Cormorant Garamond',serif",
+          fontSize:22, color:'#5C4D44', marginBottom:4, textAlign:'center',
+        }}>Acceso privado</div>
+        <div style={{fontSize:13,color:'#8B7D72',textAlign:'center',marginBottom:22}}>
+          Tu planeador de boda
         </div>
 
-        <form onSubmit={submit} style={{ display: 'flex', flexDirection: 'column', gap: 14 }}>
-          <div style={{ position: 'relative' }}>
-            <input
-              type={show ? 'text' : 'password'}
-              value={pwd}
-              onChange={e => { setPwd(e.target.value); setError('') }}
-              placeholder="Contraseña"
-              className="input-field"
-              style={{ paddingRight: 40 }}
-              autoFocus
-            />
-            <button type="button" onClick={() => setShow(s => !s)}
-              style={{ position: 'absolute', right: 12, top: '50%', transform: 'translateY(-50%)', background: 'none', border: 'none', cursor: 'pointer', fontSize: 13, color: 'var(--taupe)' }}>
-              {show ? '🙈' : '👁️'}
-            </button>
-          </div>
-          {error && <div style={{ fontSize: 12, color: 'var(--red)', textAlign: 'center' }}>{error}</div>}
-          <button type="submit" className="btn" style={{ width: '100%', justifyContent: 'center', padding: 14, fontSize: 13 }}>
-            Entrar →
+        <form onSubmit={submit}>
+          <input
+            type="password" value={pw} onChange={e=>{setPw(e.target.value);setErr('')}}
+            placeholder="Contraseña del evento"
+            className="input-field"
+            style={{textAlign:'center',letterSpacing:'4px',marginBottom:12,fontSize:16}}
+            autoFocus autoComplete="current-password"
+          />
+          {err && (
+            <div style={{fontSize:12,color:'#B85C5C',textAlign:'center',marginBottom:10,
+              background:'#FAEAEA',padding:'8px',borderRadius:8}}>{err}</div>
+          )}
+          <button type="submit" className="btn-primary"
+            style={{opacity:loading?.7:1}}>
+            {loading ? 'Entrando...' : 'Entrar'}
           </button>
         </form>
+      </div>
 
-        <div style={{ textAlign: 'center', marginTop: 32, fontSize: 10, color: 'var(--taupe)', fontStyle: 'italic' }}>
-          con amor, tu bro
-        </div>
+      <div style={{marginTop:32,fontSize:11,color:'#C4AFA0',fontStyle:'italic',opacity:.7}}>
+        con amor, tu bro
       </div>
     </div>
   )

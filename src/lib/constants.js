@@ -9,44 +9,49 @@ export const WEDDING_DATE = new Date('2026-11-20T17:00:00')
 export const VENUE = 'Quinta Montes Molina'
 export const APP_PASSWORD = import.meta.env.VITE_APP_PASSWORD || 'bodacaroluis2026'
 
+// Bottom nav — 5 tabs
+export const BOTTOM_NAV = [
+  { id: 'home',      icon: '🏠', label: 'Inicio' },
+  { id: 'pending',   icon: '✓',  label: 'Pendientes' },
+  { id: 'timeline',  icon: '📅', label: 'Timeline' },
+  { id: 'archivos',  icon: '🗂️', label: 'Archivos' },
+  { id: 'more',      icon: '⋯',  label: 'Más' },
+]
+
+// Full nav sections (desktop sidebar + "Más" drawer)
 export const NAV_SECTIONS = [
   { label: 'Principal', items: [
-    { id: 'dashboard', icon: '🏠', label: 'Dashboard' },
-    { id: 'timeline', icon: '📅', label: 'Timeline' },
-    { id: 'proveedores', icon: '💳', label: 'Proveedores' },
+    { id: 'home',       icon: '🏠', label: 'Inicio' },
+    { id: 'pending',    icon: '✓',  label: 'Pendientes' },
+    { id: 'timeline',   icon: '📅', label: 'Timeline' },
   ]},
   { label: 'Ceremonias', items: [
-    { id: 'civil', icon: '📜', label: 'Boda Civil' },
-    { id: 'misa', icon: '⛪', label: 'Misa' },
+    { id: 'civil',      icon: '📜', label: 'Boda Civil' },
+    { id: 'misa',       icon: '⛪', label: 'Misa' },
   ]},
   { label: 'Planeación', items: [
-    { id: 'invitados', icon: '👥', label: 'Invitados' },
-    { id: 'logistica', icon: '🗺️', label: 'Logística' },
-    { id: 'fotos', icon: '📷', label: 'Fotos' },
-    { id: 'week', icon: '🗓️', label: 'Week Planner' },
-    { id: 'eventos', icon: '🥂', label: 'Eventos' },
+    { id: 'proveedores',icon: '💳', label: 'Proveedores' },
+    { id: 'invitados',  icon: '👥', label: 'Invitados' },
+    { id: 'logistica',  icon: '🗺️', label: 'Logística' },
+    { id: 'fotos',      icon: '📷', label: 'Fotos' },
+    { id: 'week',       icon: '🗓️', label: 'Week Planner' },
+    { id: 'eventos',    icon: '🥂', label: 'Eventos' },
   ]},
   { label: 'Notas & más', items: [
-    { id: 'notas', icon: '📝', label: 'Notas Maestras' },
-    { id: 'categorias', icon: '✨', label: 'Categorías' },
-    { id: 'archivos', icon: '🗂️', label: 'Archivos' },
+    { id: 'notas',      icon: '📝', label: 'Notas Maestras' },
+    { id: 'archivos',   icon: '🗂️', label: 'Archivos' },
   ]},
 ]
 
-export const SYSTEM_PROMPT = `Eres un asistente especializado en análisis de notas de planeación de bodas.
-Analiza el texto y devuelve ÚNICAMENTE un objeto JSON válido sin texto adicional ni backticks.
-
-Estructura exacta:
-{
-  "resumen": "string max 120 chars",
-  "categoria_sugerida": "proveedores|civil|misa|invitados|logistica|fotos|week|eventos|notas|categorias",
-  "confianza": 0.0-1.0,
-  "proveedores": [{"nombre":"","categoria":"","contacto":null,"total":null,"pagado":null,"saldo":null,"fecha_pago":null,"status":"pendiente","notas":null}],
-  "eventos": [{"nombre":"","fecha":null,"hora":null,"lugar":null,"descripcion":null,"tipo":"otro"}],
-  "tareas": [{"texto":"","completada":false,"prioridad":"media","fecha_limite":null}],
-  "invitados": [{"grupo":"","cantidad":null,"confirmados":null,"notas":null}],
-  "pagos": [{"concepto":"","monto":0,"fecha":null,"estado":"pendiente","proveedor":null}],
-  "logistica": [{"hora":null,"actividad":"","responsable":null,"lugar":null}],
-  "links": [{"titulo":"","url":"","nota":null}],
-  "alertas_duplicado": [{"tipo":"proveedor|evento|pago","descripcion":""}]
-}`
+// "Más" drawer items (mobile)
+export const MORE_ITEMS = [
+  { id: 'proveedores', icon: '💳', label: 'Proveedores',    sub: 'Pagos y saldos', color: '#EEF5EF' },
+  { id: 'invitados',   icon: '👥', label: 'Invitados',      sub: 'Grupos y confirmaciones', color: '#EEF0F8' },
+  { id: 'civil',       icon: '📜', label: 'Boda Civil',     sub: 'Documentos y pendientes', color: '#FDF3E8' },
+  { id: 'misa',        icon: '⛪', label: 'Misa',           sub: 'Ceremonia religiosa', color: '#F0EBF8' },
+  { id: 'logistica',   icon: '🗺️', label: 'Logística',      sub: 'Plan del día', color: '#FAEAEA' },
+  { id: 'fotos',       icon: '📷', label: 'Fotos',          sub: 'Shots y sesiones', color: '#EEF5EF' },
+  { id: 'week',        icon: '🗓️', label: 'Week Planner',   sub: 'Semana de la boda', color: '#FDF3E8' },
+  { id: 'eventos',     icon: '🥂', label: 'Eventos',        sub: 'Despedida, brunch…', color: '#EEF0F8' },
+  { id: 'notas',       icon: '📝', label: 'Notas Maestras', sub: 'Apple Notes aquí', color: '#F0EBE3' },
+]

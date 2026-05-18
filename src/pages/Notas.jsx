@@ -1,63 +1,59 @@
 import { useState, useEffect } from 'react'
-import { COLORS } from '../lib/constants.js'
-import { Card, Btn, Input, Spinner, PageHeader } from '../components/UI.jsx'
 import { getNotes, upsertNote } from '../lib/db.js'
-
-const C = COLORS
+import { Spinner, PageHeader, EmptyState, Input, Btn } from '../components/UI.jsx'
 
 export default function Notas({ project }) {
-  const [notes, setNotes] = useState([])
-  const [loading, setLoading] = useState(true)
-  const [adding, setAdding] = useState(false)
-  const [form, setForm] = useState({ title: '', content: '' })
-  const [openIds, setOpenIds] = useState({})
+  const [notes,setNotes] = useState([])
+  const [loading,setLoading] = useState(true)
+  const [adding,setAdding] = useState(false)
+  const [form,setForm] = useState({title:'',content:''})
+  const [openIds,setOpenIds] = useState({})
 
-  const load = () => getNotes(project.id).then(n=>{setNotes(n);setLoading(false)})
+  const load=()=>getNotes(project.id).then(n=>{setNotes(n);setLoading(false)})
   useEffect(()=>{load()},[project.id])
 
-  const save = async () => {
-    if (!form.title.trim() || !form.content.trim()) return
-    await upsertNote({ project_id: project.id, title: form.title, content: form.content, source: 'manual' })
-    setForm({title:'',content:''}); setAdding(false); load()
-  }
+  const save=async()=>{if(!form.title.trim()||!form.content.trim())return;await upsertNote({project_id:project.id,title:form.title,content:form.content,source:'manual'});setForm({title:'',content:''});setAdding(false);load()}
 
-  if (loading) return <Spinner />
+  if(loading)return<Spinner/>
 
   return (
     <div>
-      <PageHeader title="Notas maestras" subtitle="Pega el contenido de tus Apple Notes. Se guardan en la base de datos." />
-      <div className="section-gap">
-        <div style={{background:C.beige,borderRadius:10,padding:'13px 18px',fontSize:12.5,color:C.warmGray,lineHeight:1.6}}>
-          💡 <strong>Tip:</strong> Copia cualquier nota de Apple Notes tal como está y pégala aquí. 
+      <PageHeader title="Notas maestras" subtitle="Tus Apple Notes, aquí"
+        right={<button className="btn-icon" style={{marginBottom:16,background:'#5C4D44',color:'#D4B896'}} onClick={()=>setAdding(a=>!a)}>+</button>}/>
+      <div className="scroll-area">
+        <div style={{background:'#FDF3E8',borderRadius:12,padding:'12px 14px',fontSize:12.5,color:'#8B5E1A',lineHeight:1.6,marginBottom:4}}>
+          💡 Copia el contenido de cualquier nota de Apple Notes y pégala aquí tal como está.
         </div>
-        {notes.map(n=>(
-          <div key={n.id} style={{background:C.white,borderRadius:12,border:`1px solid ${C.sand}`,overflow:'hidden'}}>
-            <div style={{background:C.cream,padding:'13px 18px',display:'flex',justifyContent:'space-between',alignItems:'center',cursor:'pointer'}}
-              onClick={()=>setOpenIds(o=>({...o,[n.id]:!o[n.id]}))}>
-              <span style={{fontSize:13,fontWeight:500,color:C.darkTaupe}}>📋 {n.title}</span>
-              <div style={{display:'flex',gap:12,alignItems:'center'}}>
-                <span style={{fontSize:10,color:C.textLight}}>{new Date(n.created_at).toLocaleDateString('es-MX')}</span>
-                <span style={{fontSize:11,color:C.taupe}}>{openIds[n.id]?'Cerrar':'Ver'}</span>
+        {adding && (
+          <div className="card">
+            <div className="card-pad">
+              <div className="form-stack">
+                <Input value={form.title} onChange={v=>setForm(f=>({...f,title:v}))} placeholder="Nombre de la nota"/>
+                <Input value={form.content} onChange={v=>setForm(f=>({...f,content:v}))} placeholder="Pega aquí el contenido completo…" rows={10}/>
+                <Btn onClick={save}>Guardar nota</Btn>
+                <Btn secondary onClick={()=>setAdding(false)}>Cancelar</Btn>
               </div>
             </div>
-            {openIds[n.id] && (
-              <div style={{padding:'16px 18px',fontSize:12.5,color:C.text,lineHeight:1.9,whiteSpace:'pre-wrap'}}>{n.content}</div>
-            )}
           </div>
-        ))}
-        {adding ? (
-          <Card style={{borderTop:`3px solid ${C.champagne}`}}>
-            <div style={{display:'flex',flexDirection:'column',gap:10}}>
-              <Input value={form.title} onChange={v=>setForm(f=>({...f,title:v}))} placeholder="Nombre de la nota (ej: LOGÍSTICA BODA)" />
-              <Input value={form.content} onChange={v=>setForm(f=>({...f,content:v}))} placeholder="Pega aquí el contenido completo..." rows={10} />
-              <div style={{display:'flex',gap:8}}><Btn onClick={save}>Guardar nota</Btn><Btn ghost onClick={()=>setAdding(false)}>Cancelar</Btn></div>
-            </div>
-          </Card>
-        ) : (
-          <button className="btn-ghost" style={{width:'100%',padding:'14px'}} onClick={()=>setAdding(true)}>
-            + Agregar nota desde Apple Notes
-          </button>
         )}
+        {notes.length===0 && !adding
+          ? <EmptyState icon="📝" title="Sin notas aún" sub="Pega aquí tus notas de Apple Notes para tenerlas siempre a mano." action="+ Agregar nota" onAction={()=>setAdding(true)}/>
+          : notes.map(n=>(
+              <div key={n.id} className="card" style={{overflow:'hidden'}}>
+                <div style={{padding:'14px 16px',display:'flex',justifyContent:'space-between',alignItems:'center',cursor:'pointer',background:'#FAF8F5'}}
+                  onClick={()=>setOpenIds(o=>({...o,[n.id]:!o[n.id]}))}>
+                  <div>
+                    <div style={{fontSize:14,fontWeight:500,color:'#3D2E27'}}>📋 {n.title}</div>
+                    <div style={{fontSize:11,color:'#8B7D72',marginTop:2}}>{new Date(n.created_at).toLocaleDateString('es-MX')}</div>
+                  </div>
+                  <span style={{fontSize:12,color:'#C4AFA0'}}>{openIds[n.id]?'▲':'▼'}</span>
+                </div>
+                {openIds[n.id] && (
+                  <div style={{padding:'14px 16px',fontSize:13,color:'#3D2E27',lineHeight:1.8,whiteSpace:'pre-wrap',borderTop:'1px solid rgba(196,175,160,.15)'}}>{n.content}</div>
+                )}
+              </div>
+            ))
+        }
       </div>
     </div>
   )

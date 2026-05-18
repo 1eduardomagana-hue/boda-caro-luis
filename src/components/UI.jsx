@@ -1,148 +1,182 @@
 import { useState } from 'react'
-import { COLORS } from '../lib/constants.js'
 
-export const C = COLORS
-
-export function Card({ children, style = {}, className = '' }) {
+export function Spinner({ message = 'Cargando...' }) {
   return (
-    <div className={`card ${className}`} style={style}>
-      {children}
+    <div style={{display:'flex',flexDirection:'column',alignItems:'center',padding:'60px 20px',gap:14}}>
+      <div style={{width:32,height:32,borderRadius:'50%',border:'2.5px solid #E8DDD1',borderTopColor:'#B8975A',animation:'spin .9s linear infinite'}}/>
+      <div style={{fontSize:13,color:'#8B7D72'}}>{message}</div>
     </div>
   )
 }
 
-export function CardTitle({ children }) {
-  return <div className="card-title">{children}</div>
+export function PageHeader({ title, subtitle, right }) {
+  return (
+    <div className="page-top">
+      <div style={{display:'flex',justifyContent:'space-between',alignItems:'flex-end'}}>
+        <div>
+          <div className="page-title-mobile">{title}</div>
+          {subtitle && <div className="page-sub">{subtitle}</div>}
+        </div>
+        {right && <div style={{paddingBottom:16}}>{right}</div>}
+      </div>
+    </div>
+  )
 }
 
-export function Badge({ type = 'gray', children }) {
+export function Card({ children, style={}, noPad=false }) {
+  return (
+    <div className="card" style={style}>
+      {noPad ? children : <div className="card-pad">{children}</div>}
+    </div>
+  )
+}
+
+export function SectionHeader({ label, action, onAction }) {
+  return (
+    <div className="section-header">
+      <div className="section-label">{label}</div>
+      {action && (
+        <button onClick={onAction} style={{fontSize:12,color:'#B8975A',background:'none',border:'none',cursor:'pointer',fontFamily:"'Jost',sans-serif"}}>
+          {action}
+        </button>
+      )}
+    </div>
+  )
+}
+
+export function Badge({ type='gray', children }) {
   return <span className={`badge badge-${type}`}>{children}</span>
 }
 
-export function Btn({ children, onClick, ghost = false, disabled = false, style = {}, fullWidth = false }) {
+export function StatusBadge({ status }) {
+  const map = { pagado:['green','● Pagado'], parcial:['amber','◑ Parcial'], pendiente:['red','○ Pendiente'] }
+  const [t,l] = map[status] || ['gray',status]
+  return <Badge type={t}>{l}</Badge>
+}
+
+export function ProgressBar({ value, max=100, style={} }) {
+  const pct = Math.min(100, Math.round((value/(max||1))*100))
   return (
-    <button
-      onClick={onClick}
-      disabled={disabled}
-      className={ghost ? 'btn-ghost' : 'btn'}
-      style={{ opacity: disabled ? 0.5 : 1, cursor: disabled ? 'not-allowed' : 'pointer', width: fullWidth ? '100%' : undefined, ...style }}
-    >
-      {children}
-    </button>
+    <div className="progress-bar-outer" style={style}>
+      <div className="progress-bar-inner" style={{width:`${pct}%`}}/>
+    </div>
   )
 }
 
-export function Input({ value, onChange, placeholder, type = 'text', rows, style = {} }) {
-  if (rows) return (
-    <textarea value={value} onChange={e => onChange(e.target.value)} placeholder={placeholder}
-      rows={rows} className="input-field" style={style} />
-  )
+export function CheckRow({ item, onToggle }) {
   return (
-    <input value={value} onChange={e => onChange(e.target.value)} placeholder={placeholder}
-      type={type} className="input-field" style={{ height: 'auto', ...style }} />
-  )
-}
-
-export function Select({ value, onChange, options, style = {} }) {
-  return (
-    <select value={value} onChange={e => onChange(e.target.value)}
-      className="input-field" style={{ height: 'auto', cursor: 'pointer', ...style }}>
-      {options.map(o => (
-        <option key={typeof o === 'string' ? o : o.value} value={typeof o === 'string' ? o : o.value}>
-          {typeof o === 'string' ? o : o.label}
-        </option>
-      ))}
-    </select>
+    <div className="check-row" onClick={onToggle}>
+      <div className={`check-box ${item.done?'done':''}`}>
+        {item.done && <span style={{color:'white',fontSize:11,fontWeight:'bold'}}>✓</span>}
+      </div>
+      <span className={`check-text ${item.done?'done':''}`}>{item.text || item.texto}</span>
+    </div>
   )
 }
 
-export function Accordion({ title, children, defaultOpen = false }) {
-  const [open, setOpen] = useState(defaultOpen)
+export function EmptyState({ icon, title, sub, action, onAction }) {
   return (
-    <div className="accordion">
-      <div className="accordion-header" onClick={() => setOpen(o => !o)}>
-        <span className="accordion-title">{title}</span>
-        <span style={{ color: C.taupe, fontSize: 12 }}>{open ? '▲' : '▼'}</span>
+    <div className="empty-state">
+      <div className="empty-icon">{icon}</div>
+      <div className="empty-title">{title}</div>
+      {sub && <div className="empty-sub">{sub}</div>}
+      {action && (
+        <button className="btn-primary btn-sm" onClick={onAction}
+          style={{marginTop:20,width:'auto',display:'inline-block'}}>
+          {action}
+        </button>
+      )}
+    </div>
+  )
+}
+
+export function Accordion({ title, meta, children, defaultOpen=false }) {
+  const [open,setOpen] = useState(defaultOpen)
+  return (
+    <div className="accordion-item">
+      <div className="accordion-header" onClick={()=>setOpen(o=>!o)}>
+        <div>
+          <div style={{fontSize:14,fontWeight:500,color:'#3D2E27'}}>{title}</div>
+          {meta && <div style={{fontSize:11,color:'#8B7D72',marginTop:2}}>{meta}</div>}
+        </div>
+        <span style={{color:'#C4AFA0',fontSize:12,transition:'transform .2s',transform:open?'rotate(180deg)':'none'}}>▼</span>
       </div>
       {open && <div className="accordion-body">{children}</div>}
     </div>
   )
 }
 
-export function ProgressBar({ value, max = 100 }) {
-  const pct = Math.min(100, Math.round((value / max) * 100))
+export function Input({ value, onChange, placeholder, type='text', rows, label, style={} }) {
   return (
-    <div className="progress-bar-outer">
-      <div className="progress-bar-inner" style={{ width: `${pct}%` }} />
+    <div className="input-group">
+      {label && <div className="input-label">{label}</div>}
+      {rows
+        ? <textarea value={value} onChange={e=>onChange(e.target.value)} placeholder={placeholder} rows={rows} className="input-field" style={style}/>
+        : <input value={value} onChange={e=>onChange(e.target.value)} placeholder={placeholder} type={type} className="input-field" style={{height:'auto',...style}}/>
+      }
     </div>
   )
 }
 
-export function SectionGap({ children }) {
-  return <div className="section-gap">{children}</div>
+export function Select({ value, onChange, options, label, style={} }) {
+  return (
+    <div className="input-group">
+      {label && <div className="input-label">{label}</div>}
+      <select value={value} onChange={e=>onChange(e.target.value)} className="input-field" style={{height:'auto',cursor:'pointer',...style}}>
+        {options.map(o=>(
+          <option key={typeof o==='string'?o:o.value} value={typeof o==='string'?o:o.value}>
+            {typeof o==='string'?o:o.label}
+          </option>
+        ))}
+      </select>
+    </div>
+  )
 }
 
-export function Grid({ cols = 2, children, gap = 16 }) {
+export function Btn({ children, onClick, secondary=false, disabled=false, style={}, sm=false }) {
   return (
-    <div className={`grid-${cols}`} style={{ gap }}>
+    <button onClick={onClick} disabled={disabled}
+      className={`${secondary?'btn-secondary':'btn-primary'}${sm?' btn-sm':''}`}
+      style={{opacity:disabled?.5:1,cursor:disabled?'not-allowed':'pointer',...style}}>
+      {children}
+    </button>
+  )
+}
+
+export function BtnRow({ children }) {
+  return <div className="btn-row">{children}</div>
+}
+
+export function Alert({ children, type='warning' }) {
+  const bg = type==='warning'?'#FDF3E8':type==='error'?'#FAEAEA':'#EEF5EF'
+  const co = type==='warning'?'#8B5E1A':type==='error'?'#8B3232':'#4A7A50'
+  return (
+    <div style={{background:bg,borderRadius:10,padding:'11px 14px',fontSize:12.5,color:co,lineHeight:1.5}}>
       {children}
     </div>
   )
 }
 
-export function Spinner({ message = 'Cargando...' }) {
+// Quick action sheet (FAB)
+export function QuickSheet({ actions, onClose }) {
   return (
-    <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', padding: '48px 20px', gap: 14 }}>
-      <div style={{
-        width: 36, height: 36, borderRadius: '50%',
-        border: `3px solid ${C.sand}`, borderTopColor: C.gold,
-        animation: 'spin 0.9s linear infinite',
-      }} />
-      <style>{`@keyframes spin{to{transform:rotate(360deg)}}`}</style>
-      <div style={{ fontSize: 13, color: C.textLight }}>{message}</div>
-    </div>
-  )
-}
-
-export function StatusDot({ status }) {
-  const color = status === 'pagado' ? C.green : status === 'parcial' ? C.amber : C.red
-  return <span style={{ display: 'inline-block', width: 8, height: 8, borderRadius: '50%', background: color, marginRight: 6 }} />
-}
-
-export function StatusBadge({ status }) {
-  const map = { pagado: ['badge-green', '● Pagado'], parcial: ['badge-amber', '◑ Parcial'], pendiente: ['badge-red', '○ Pendiente'] }
-  const [cls, label] = map[status] || ['badge-gray', status]
-  return <span className={`badge ${cls}`}>{label}</span>
-}
-
-export function Alert({ children, type = 'warning' }) {
-  return (
-    <div style={{
-      background: '#FDF3E8', border: '1px solid #E8D0A8', borderRadius: 8,
-      padding: '10px 14px', fontSize: 12.5, color: '#8B5E1A',
-      marginBottom: 8, display: 'flex', alignItems: 'flex-start', gap: 8,
-    }}>
-      {type === 'warning' ? '⚠️' : 'ℹ️'} <span>{children}</span>
-    </div>
-  )
-}
-
-export function CheckItem({ item, onToggle }) {
-  return (
-    <div className="checklist-item" onClick={onToggle}>
-      <div className={`check-box ${item.done ? 'done' : ''}`}>
-        {item.done && <span style={{ color: 'white', fontSize: 9, fontWeight: 'bold' }}>✓</span>}
+    <>
+      <div className="sheet-overlay" onClick={onClose}/>
+      <div className="sheet">
+        <div className="sheet-handle"/>
+        <div className="sheet-title">Acción rápida</div>
+        <div className="sheet-actions">
+          {actions.map((a,i)=>(
+            <button key={i} className="sheet-action" onClick={()=>{a.onPress();onClose();}}>
+              <div className="sheet-action-icon" style={{background:a.color||'#F0EBE3'}}>{a.icon}</div>
+              <div>
+                <div className="sheet-action-label">{a.label}</div>
+                {a.sub && <div className="sheet-action-sub">{a.sub}</div>}
+              </div>
+            </button>
+          ))}
+        </div>
       </div>
-      <span className={`check-text ${item.done ? 'done' : ''}`}>{item.text}</span>
-    </div>
-  )
-}
-
-export function PageHeader({ title, subtitle }) {
-  return (
-    <div className="page-header">
-      <div className="page-title">{title}</div>
-      {subtitle && <div className="page-subtitle">{subtitle}</div>}
-    </div>
+    </>
   )
 }
